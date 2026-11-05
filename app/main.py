@@ -1,11 +1,12 @@
 from copy import error
 
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import FastAPI, Response, status, HTTPException, Depends
 from typing import Optional
 from pydantic import BaseModel
 import psycopg
 import time
 from psycopg.rows import dict_row
+from sqlalchemy.orm import Session
 from . import models
 from .database import SessionLocal, engine
 
@@ -42,6 +43,11 @@ while True:
 @app.get("/")
 def root():
     return {"message": "Hello World"}
+
+@app.get("/sqlalchemy")
+def test_post(db: Session = Depends(get_db)):
+    return {"status": "success"}
+
 
 @app.get("/posts")
 def get_posts():
